@@ -13,7 +13,9 @@
                  [thi.ng/geom "0.0.1158-SNAPSHOT"]
                  [thi.ng/domus "0.3.0-SNAPSHOT"]]
 
-  :plugins      [[lein-figwheel "0.5.0-6"]
+  :plugins      [[cider/cider-nrepl "0.9.1"]
+                 [refactor-nrepl "1.1.0"]
+                 [lein-figwheel "0.5.0-6"]
                  [lein-cljsbuild "1.1.3" :exclusions [[org.clojure/clojure]]]]
 
   :source-paths ["src"]

@@ -119,6 +119,8 @@
                                        #_(assoc :shader thresh))}})
     (init-rtc-stream vw vh)))
 
+(def try-it true)
+
 (defn update-app
   [this]
   (fn [t frame]
@@ -127,7 +129,7 @@
         (gl/configure tex {:image (:video stream)})
         (gl/bind tex)
         ;; render to texture
-        ;; (gl/bind (:fbo scene))
+        (when try-it (gl/bind (:fbo scene)))
         (doto gl
           ;;(gl/set-viewport 0 0 512 512)
           (gl/clear-color-and-depth-buffer col/BLACK 1)
@@ -135,15 +137,16 @@
            (-> (:img scene)
                (assoc-in [:uniforms :time] t)
                (assoc :shader (shaders curr-shader)))))
-        ;;(gl/unbind (:fbo scene))
+        (when try-it (gl/unbind (:fbo scene)))
         ;; render cube to main canvas
-        ;;(gl/bind (:fbo-tex scene) 0)
-        #_(doto gl
-          (gl/set-viewport view)
-          (gl/draw-with-shader
-           (-> (:cube scene)
-               (cam/apply
-                (cam/perspective-camera
-                 {:eye (vec3 0 0 1.25) :fov 90 :aspect view}))
-               (assoc-in [:uniforms :model] (-> M44 (g/rotate-x t) (g/rotate-y (* t 2))))))))
+        (when try-it
+          (gl/bind (:fbo-tex scene) 0)
+          (doto gl
+            (gl/set-viewport view)
+            (gl/draw-with-shader
+             (-> (:cube scene)
+                 (cam/apply
+                  (cam/perspective-camera
+                   {:eye (vec3 0 0 1.25) :fov 90 :aspect view}))
+                 (assoc-in [:uniforms :model] (-> M44 (g/rotate-x t) (g/rotate-y (* t 2)))))))))
       (:active (reagent/state this)))))
